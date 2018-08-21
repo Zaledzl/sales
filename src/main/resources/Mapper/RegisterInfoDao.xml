@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--上面的信息的意思大概就是按照mybatis的mappper的规范来-->
+<mapper namespace="com.sales.dao.RegisterDao">
+
+    <!--这里面的参数是如何传递进来的-->
+    <!--#{}   数据是从controller传递进来的-->
+    <!--其实HashMap是mybatis自己配置好的，直接使用就可以。-->
+    <!--map中key的名字，就是在#{}中使用的-->
+
+    <select id="queryRegisterInfo" resultType="com.sales.entity.RegisterInfo">
+        select username,password
+        from registerinfo
+    </select>
+    <select id="querryRegisterInfoByUserName" resultType="com.sales.entity.RegisterInfo">
+        select username,password
+        from registerinfo
+        where
+        username=#{username}
+    </select>
+    <!--useGeneratedKeys的意思是一旦insert成功，就返回一个主键的值-->
+    <insert id="insertRegisterInfo" useGeneratedKeys="true" keyProperty="username" keyColumn="username"
+            parameterType="com.sales.entity.RegisterInfo">
+        insert into
+        registerinfo(username,password)
+        values
+        (#{username},#{password})
+    </insert>
+    <update id="updateRegisterInfo" parameterType="com.sales.entity.RegisterInfo">
+        update registerinfo
+        <set>
+            <if test="username!= null">username=#{username},</if>
+            <if test="password != null">password=#{password}</if>
+        </set>
+        where username=#{username}
+    </update>
+    <!--上面用到了判断是否为空，所以在实体类里面用了包装类-->
+    <delete id="deleteRegisterInfo">
+        delete from
+        registerinfo
+        where
+        username=#{username}
+    </delete>
+</mapper>
